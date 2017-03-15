@@ -1,0 +1,8 @@
+<resources>
+    <string name="app_name">Popular Movies</string>
+    <string name="poster_image_shared">poster_image</string>
+    <string name="menuSortPopular">Sort: Popular</string>
+    <string name="menuSortTopRated">Sort: Top Rated</string>
+    <string name="release_date">Release Date:</string>
+    <string name="rating">Rating:</string>
+</resources>
