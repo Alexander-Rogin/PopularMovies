@@ -4,4 +4,8 @@
     <dimen name="activity_vertical_margin">16dp</dimen>
     <dimen name="common_text_size">15sp</dimen>
     <dimen name="header_text_size">25sp</dimen>
+    <dimen name="constraint_margin">8dp</dimen>
+    <dimen name="header_margin">16dp</dimen>
+    <dimen name="image_height">329dp</dimen>
+    <dimen name="image_width">181dp</dimen>
 </resources>
