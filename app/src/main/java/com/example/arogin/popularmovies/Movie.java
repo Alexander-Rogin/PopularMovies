@@ -13,8 +13,11 @@ public class Movie implements Parcelable {
     private String mOverview;
     private double mRating;
     private String mReleaseDate;
+    private int mId;
+    private Trailer[] mTrailers;
 
-    public Movie(String title, String posterPath, String overview, double rating, String releaseDate) {
+    public Movie(int id, String title, String posterPath, String overview, double rating, String releaseDate) {
+        mId = id;
         mTitle = title;
         mPosterRelativePath = posterPath;
         mOverview = overview;
@@ -74,5 +77,17 @@ public class Movie implements Parcelable {
         dest.writeString(mOverview);
         dest.writeDouble(mRating);
         dest.writeString(mReleaseDate);
+    }
+
+    public int getId() {
+        return mId;
+    }
+
+    public void setTrailers(Trailer[] trailers) {
+        mTrailers = trailers;
+    }
+
+    public Trailer[] getTrailers() {
+        return mTrailers;
     }
 }

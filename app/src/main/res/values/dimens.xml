@@ -8,4 +8,5 @@
     <dimen name="header_margin">16dp</dimen>
     <dimen name="image_height">329dp</dimen>
     <dimen name="image_width">181dp</dimen>
+    <dimen name="trailers_header_text_size">20sp</dimen>
 </resources>
