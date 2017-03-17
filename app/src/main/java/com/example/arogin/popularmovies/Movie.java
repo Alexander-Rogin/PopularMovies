@@ -3,6 +3,8 @@ package com.example.arogin.popularmovies;
 import android.os.Parcel;
 import android.os.Parcelable;
 
+import java.util.Arrays;
+
 /**
  * Created by arogin on 2/9/17.
  */
@@ -31,6 +33,10 @@ public class Movie implements Parcelable {
         mOverview = in.readString();
         mRating = in.readDouble();
         mReleaseDate = in.readString();
+        Parcelable[] trailersParcel = in.readParcelableArray(Trailer.class.getClassLoader());
+        if (trailersParcel != null) {
+            mTrailers = Arrays.copyOf(trailersParcel, trailersParcel.length, Trailer[].class);
+        }
     }
 
     public static final Creator<Movie> CREATOR = new Creator<Movie>() {
@@ -77,6 +83,7 @@ public class Movie implements Parcelable {
         dest.writeString(mOverview);
         dest.writeDouble(mRating);
         dest.writeString(mReleaseDate);
+        dest.writeParcelableArray(mTrailers, 0);
     }
 
     public int getId() {
