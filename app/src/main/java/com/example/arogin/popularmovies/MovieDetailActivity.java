@@ -2,8 +2,12 @@ package com.example.arogin.popularmovies;
 
 import android.app.ActionBar;
 import android.content.Intent;
+import android.net.Uri;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.widget.GridLayoutManager;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.widget.ImageView;
@@ -11,17 +15,27 @@ import android.widget.TextView;
 
 import com.squareup.picasso.Picasso;
 
-public class MovieDetailActivity extends AppCompatActivity {
+public class MovieDetailActivity extends AppCompatActivity implements TrailerAdapter.TrailerAdapterOnClickHandler {
     private ImageView mPoster;
     private TextView mTitle;
     private TextView mPlot;
     private TextView mRating;
     private TextView mRelease;
+    private RecyclerView mRecyclerViewTrailers;
+    private LinearLayoutManager mLinearLayoutManager;
+    private TrailerAdapter mTrailerAdapter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_movie_detail);
+        mRecyclerViewTrailers = (RecyclerView) findViewById(R.id.recyclerview_trailers);
+        mLinearLayoutManager = new LinearLayoutManager(this);
+        mRecyclerViewTrailers.setLayoutManager(mLinearLayoutManager);
+
+        mRecyclerViewTrailers.setHasFixedSize(true);
+        mTrailerAdapter = new TrailerAdapter(this);
+        mRecyclerViewTrailers.setAdapter(mTrailerAdapter);
 
         android.support.v7.app.ActionBar actionBar = getSupportActionBar();
         actionBar.setHomeButtonEnabled(true);
@@ -36,6 +50,7 @@ public class MovieDetailActivity extends AppCompatActivity {
             mPlot.setText(movie.getOverview());
             mRating.setText(String.valueOf(movie.getRating()));
             mRelease.setText(movie.getReleaseDate());
+            mTrailerAdapter.setTrailerData(movie.getTrailers());
         }
     }
 
@@ -45,5 +60,13 @@ public class MovieDetailActivity extends AppCompatActivity {
         mPlot = (TextView) findViewById(R.id.tv_plot);
         mRating = (TextView) findViewById(R.id.tv_rating);
         mRelease = (TextView) findViewById(R.id.tv_release);
+    }
+
+    @Override
+    public void onClick(Trailer chosenTrailer) {
+        Intent intent = new Intent(Intent.ACTION_VIEW, chosenTrailer.getTrailerUri());
+        if (intent.resolveActivity(getPackageManager()) != null) {
+            startActivity(intent);
+        }
     }
 }

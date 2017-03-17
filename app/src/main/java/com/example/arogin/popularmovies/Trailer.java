@@ -1,5 +1,6 @@
 package com.example.arogin.popularmovies;
 
+import android.net.Uri;
 import android.os.Parcel;
 import android.os.Parcelable;
 
@@ -48,5 +49,17 @@ class Trailer implements Parcelable{
         dest.writeString(mId);
         dest.writeString(mName);
         dest.writeString(mKey);
+    }
+
+    public String getName() {
+        return mName;
+    }
+
+    public Uri getTrailerUri() {
+        Uri builtUri = Uri.parse(YOUTUBE_PREFIX).buildUpon()
+                .appendQueryParameter(YOUTUBE_ID_PARAM, mKey)
+                .build();
+
+        return builtUri;
     }
 }
