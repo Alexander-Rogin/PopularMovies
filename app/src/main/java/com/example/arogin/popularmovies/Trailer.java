@@ -12,7 +12,7 @@ class Trailer implements Parcelable{
     private String mId;
     private String mName;
     private String mKey;
-    private static String YOUTUBE_PREFIX = "www.youtube.com/watch";
+    private static String YOUTUBE_PREFIX = "http://www.youtube.com/watch";
     private static String YOUTUBE_ID_PARAM = "v";
 
     public Trailer(String id, String name, String key) {
