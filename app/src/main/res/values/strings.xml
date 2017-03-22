@@ -6,4 +6,5 @@
     <string name="release_date">Release Date:</string>
     <string name="rating">Rating:</string>
     <string name="trailers">Trailers</string>
+    <string name="add_to_favorite">Add to favorite</string>
 </resources>

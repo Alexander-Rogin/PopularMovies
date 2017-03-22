@@ -11,8 +11,13 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
+import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.squareup.picasso.Picasso;
 
@@ -25,6 +30,8 @@ public class MovieDetailActivity extends AppCompatActivity implements TrailerAda
     private RecyclerView mRecyclerViewTrailers;
     private LinearLayoutManager mLinearLayoutManager;
     private TrailerAdapter mTrailerAdapter;
+
+    private Movie mMovie;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -45,13 +52,13 @@ public class MovieDetailActivity extends AppCompatActivity implements TrailerAda
 
         Intent parentIntent = getIntent();
         if (parentIntent.hasExtra(Intent.EXTRA_TEXT)) {
-            Movie movie = parentIntent.getParcelableExtra(Intent.EXTRA_TEXT);
-            Picasso.with(this).load("http://image.tmdb.org/t/p/w185" + movie.getPosterRelativePath()).into(mPoster);
-            mTitle.setText(movie.getTitle());
-            mPlot.setText(movie.getOverview());
-            mRating.setText(String.valueOf(movie.getRating()));
-            mRelease.setText(movie.getReleaseDate());
-            mTrailerAdapter.setTrailerData(movie.getTrailers());
+            mMovie = parentIntent.getParcelableExtra(Intent.EXTRA_TEXT);
+            Picasso.with(this).load("http://image.tmdb.org/t/p/w185" + mMovie.getPosterRelativePath()).into(mPoster);
+            mTitle.setText(mMovie.getTitle());
+            mPlot.setText(mMovie.getOverview());
+            mRating.setText(String.valueOf(mMovie.getRating()));
+            mRelease.setText(mMovie.getReleaseDate());
+            mTrailerAdapter.setTrailerData(mMovie.getTrailers());
         }
     }
 
@@ -69,5 +76,35 @@ public class MovieDetailActivity extends AppCompatActivity implements TrailerAda
         if (intent.resolveActivity(getPackageManager()) != null) {
             startActivity(intent);
         }
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        MenuInflater inflater = getMenuInflater();
+        inflater.inflate(R.menu.movie_activity_options, menu);
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case R.id.add_to_favorite:
+                handleFavorites(item);
+                return true;
+
+            default:
+                return super.onOptionsItemSelected(item);
+        }
+    }
+
+    private void handleFavorites(MenuItem addButton) {
+        boolean checked = addButton.isChecked();
+        if (checked) {
+            Toast.makeText(this, "Removing from favorites", Toast.LENGTH_SHORT).show();
+        } else {
+            Toast.makeText(this, "Adding to favorites", Toast.LENGTH_SHORT).show();
+        }
+        addButton.setChecked(!checked);
+
     }
 }
