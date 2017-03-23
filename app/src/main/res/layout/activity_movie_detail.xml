@@ -41,7 +41,17 @@
                 app:layout_constraintVertical_bias="0.0"
             android:id="@+id/constraintLayout">
 
-                <TextView
+            <Button
+                android:id="@+id/button"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="@dimen/constraint_margin"
+                android:text="@string/open_reviews"
+                app:layout_constraintLeft_toLeftOf="@+id/constraintLayout"
+                android:layout_marginTop="@dimen/constraint_margin"
+                app:layout_constraintTop_toBottomOf="@+id/textView" />
+
+            <TextView
                     android:id="@+id/tv_movie_title"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
@@ -133,6 +143,7 @@
             app:layout_constraintTop_toBottomOf="@+id/textView3"
             android:layout_marginLeft="8dp"
             app:layout_constraintLeft_toLeftOf="parent" />
+
     </android.support.constraint.ConstraintLayout>
 
 </ScrollView>

@@ -16,12 +16,6 @@ import java.net.URL;
  */
 
 public class PopularMoviesFetcherTask extends AsyncTask<String, Void, Movie[]> {
-    private static final String POPULAR_MOVIES_BASE_ADDRESS = "http://api.themoviedb.org/3/movie/";
-    private static final String POPULAR_MOVIES_DEFAULT_SORT = "popular";
-    private static final String POPULAR_MOVIES_API_KEY_PARAM = "api_key";
-    private static final String POPULAR_MOVIES_API_KEY = BuildConfig.THE_MOVIE_DB_API_TOKEN;
-    private static final String POPULAR_MOVIES_VIDEOS = "videos";
-
     private MovieAdapter mMovieAdapter;
 
     public PopularMoviesFetcherTask(MovieAdapter movieAdapter) {
@@ -31,15 +25,9 @@ public class PopularMoviesFetcherTask extends AsyncTask<String, Void, Movie[]> {
 
     @Override
     protected Movie[] doInBackground(String... params) {
-        String sortType = (params[0] != null && params[0] != "") ? params[0] : POPULAR_MOVIES_DEFAULT_SORT;
-        Uri builtUri = Uri.parse(POPULAR_MOVIES_BASE_ADDRESS).buildUpon()
-                .appendQueryParameter(POPULAR_MOVIES_API_KEY_PARAM, POPULAR_MOVIES_API_KEY)
-                .appendPath(sortType).build();
-
-        String results = getNetworkData(builtUri);
+        String results = MovieDbHelper.getMoviesJsonData(params[0]);
         if (results != null) {
             Movie[] movies = parseMoviesJsonData(results);
-            findAndSetTrailers(movies);
             return movies;
         }
         return null;
@@ -50,23 +38,6 @@ public class PopularMoviesFetcherTask extends AsyncTask<String, Void, Movie[]> {
         if (movies != null) {
             mMovieAdapter.setMoviesData(movies);
         }
-    }
-
-    private String getNetworkData(Uri uri) {
-        URL url;
-        try {
-            url = new URL(uri.toString());
-        } catch (MalformedURLException e) {
-            e.printStackTrace();
-            return null;
-        }
-        try {
-            String results = NetworkDataFetcher.getResponseFromUrl(url);
-            return results;
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-        return null;
     }
 
     private Movie[] parseMoviesJsonData(String json) {
@@ -102,55 +73,5 @@ public class PopularMoviesFetcherTask extends AsyncTask<String, Void, Movie[]> {
             e.printStackTrace();
         }
         return null;
-    }
-
-    private Trailer[] getTrailers(int id) {
-        Uri builtUri = Uri.parse(POPULAR_MOVIES_BASE_ADDRESS).buildUpon()
-                .appendPath(Integer.toString(id))
-                .appendPath(POPULAR_MOVIES_VIDEOS)
-                .appendQueryParameter(POPULAR_MOVIES_API_KEY_PARAM, POPULAR_MOVIES_API_KEY)
-                .build();
-        String results = getNetworkData(builtUri);
-        if (results != null) {
-            Trailer[] trailers = parseTrailersJsonData(results);
-            return trailers;
-        }
-        return null;
-    }
-
-    private Trailer[] parseTrailersJsonData(String json) {
-        final String JSON_RESULTS_CODE = "results";
-        final String JSON_NAME_CODE = "name";
-        final String JSON_KEY_CODE = "key";
-        final String JSON_ID_CODE = "id";
-
-        try {
-            JSONObject trailersJson = new JSONObject(json);
-            if (trailersJson.has(JSON_RESULTS_CODE) == false) {
-                return null;
-            }
-            JSONArray trailersArray = trailersJson.getJSONArray(JSON_RESULTS_CODE);
-            Trailer[] trailers = new Trailer[trailersArray.length()];
-            for (int i = 0; i < trailersArray.length(); i++) {
-                JSONObject trailer = trailersArray.getJSONObject(i);
-
-                String name = trailer.getString(JSON_NAME_CODE);
-                String key = trailer.getString(JSON_KEY_CODE);
-                String id = trailer.getString(JSON_ID_CODE);
-
-                trailers[i] = new Trailer(id, name, key);
-            }
-            return trailers;
-        } catch (JSONException e) {
-            e.printStackTrace();
-        }
-        return null;
-    }
-
-    private void findAndSetTrailers(Movie[] movies) {
-        for (Movie movie : movies) {
-            Trailer[] trailers = getTrailers(movie.getId());
-            movie.setTrailers(trailers);
-        }
     }
 }

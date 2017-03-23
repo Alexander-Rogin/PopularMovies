@@ -62,7 +62,8 @@ public class MovieDetailActivity extends AppCompatActivity implements TrailerAda
             mPlot.setText(mMovie.getOverview());
             mRating.setText(String.valueOf(mMovie.getRating()));
             mRelease.setText(mMovie.getReleaseDate());
-            mTrailerAdapter.setTrailerData(mMovie.getTrailers());
+
+            new TrailerFetcherTask(mTrailerAdapter).execute(mMovie.getId());
         }
     }
 

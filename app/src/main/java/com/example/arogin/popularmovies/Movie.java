@@ -17,7 +17,6 @@ public class Movie implements Parcelable {
     private double mRating;
     private String mReleaseDate;
     private int mId;
-    private Trailer[] mTrailers;
 
     public Movie(int id, String title, String posterPath, String overview, double rating, String releaseDate) {
         mId = id;
@@ -34,10 +33,6 @@ public class Movie implements Parcelable {
         mOverview = in.readString();
         mRating = in.readDouble();
         mReleaseDate = in.readString();
-        Parcelable[] trailersParcel = in.readParcelableArray(Trailer.class.getClassLoader());
-        if (trailersParcel != null) {
-            mTrailers = Arrays.copyOf(trailersParcel, trailersParcel.length, Trailer[].class);
-        }
         mId = in.readInt();
     }
 
@@ -85,19 +80,10 @@ public class Movie implements Parcelable {
         dest.writeString(mOverview);
         dest.writeDouble(mRating);
         dest.writeString(mReleaseDate);
-        dest.writeParcelableArray(mTrailers, 0);
         dest.writeInt(mId);
     }
 
     public int getId() {
         return mId;
-    }
-
-    public void setTrailers(Trailer[] trailers) {
-        mTrailers = trailers;
-    }
-
-    public Trailer[] getTrailers() {
-        return mTrailers;
     }
 }

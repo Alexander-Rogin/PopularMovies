@@ -8,7 +8,7 @@ import android.os.Parcelable;
  * Created by arogin on 3/16/17.
  */
 
-class Trailer implements Parcelable{
+class Trailer {
     private String mId;
     private String mName;
     private String mKey;
@@ -19,36 +19,6 @@ class Trailer implements Parcelable{
         mId = id;
         mName = name;
         mKey = key;
-    }
-
-    protected Trailer(Parcel in) {
-        mId = in.readString();
-        mName = in.readString();
-        mKey = in.readString();
-    }
-
-    public static final Creator<Trailer> CREATOR = new Creator<Trailer>() {
-        @Override
-        public Trailer createFromParcel(Parcel in) {
-            return new Trailer(in);
-        }
-
-        @Override
-        public Trailer[] newArray(int size) {
-            return new Trailer[size];
-        }
-    };
-
-    @Override
-    public int describeContents() {
-        return 0;
-    }
-
-    @Override
-    public void writeToParcel(Parcel dest, int flags) {
-        dest.writeString(mId);
-        dest.writeString(mName);
-        dest.writeString(mKey);
     }
 
     public String getName() {

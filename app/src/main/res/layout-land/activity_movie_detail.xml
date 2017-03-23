@@ -41,6 +41,16 @@
                 app:layout_constraintTop_toTopOf="@+id/iv_thumbnail"
                 app:layout_constraintVertical_bias="0.0">
 
+                <Button
+                    android:id="@+id/open_reviews"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="@dimen/constraint_margin"
+                    android:text="@string/open_reviews"
+                    app:layout_constraintTop_toBottomOf="@+id/tv_movie_title"
+                    app:layout_constraintLeft_toRightOf="@+id/tv_release"
+                    android:layout_marginTop="@dimen/constraint_margin" />
+
                 <TextView
                     android:id="@+id/tv_plot"
                     android:layout_width="wrap_content"
