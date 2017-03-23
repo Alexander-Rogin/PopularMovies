@@ -1,8 +1,11 @@
 package com.example.arogin.popularmovies;
 
 import android.app.ActionBar;
+import android.content.ContentValues;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.database.Cursor;
+import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -22,6 +25,7 @@ import android.widget.Toast;
 import com.squareup.picasso.Picasso;
 
 public class MovieDetailActivity extends AppCompatActivity implements TrailerAdapter.TrailerAdapterOnClickHandler {
+    private static String LOG_TAG = "MovieDetailActivity";
     private ImageView mPoster;
     private TextView mTitle;
     private TextView mPlot;
@@ -62,6 +66,14 @@ public class MovieDetailActivity extends AppCompatActivity implements TrailerAda
         }
     }
 
+    private boolean isFavorite() {
+        Cursor cursor = MainActivity.DB.rawQuery( "select * from " +
+                FavoritesContract.FavoritesEntry.TABLE_NAME +
+                " where " + FavoritesContract.FavoritesEntry.COLUMN_MOVIE_ID +
+                "=" + mMovie.getId() + "", null);
+        return cursor.getCount() > 0;
+    }
+
     private void findViews() {
         mPoster = (ImageView) findViewById(R.id.iv_thumbnail);
         mTitle = (TextView) findViewById(R.id.tv_movie_title);
@@ -82,6 +94,16 @@ public class MovieDetailActivity extends AppCompatActivity implements TrailerAda
     public boolean onCreateOptionsMenu(Menu menu) {
         MenuInflater inflater = getMenuInflater();
         inflater.inflate(R.menu.movie_activity_options, menu);
+
+        MenuItem addButton = menu.getItem(0);
+        if (isFavorite()) {
+            addButton.setIcon(android.R.drawable.star_on);
+            addButton.setChecked(true);
+        } else {
+            addButton.setIcon(android.R.drawable.star_off);
+            addButton.setChecked(false);
+        }
+
         return true;
     }
 
@@ -100,11 +122,33 @@ public class MovieDetailActivity extends AppCompatActivity implements TrailerAda
     private void handleFavorites(MenuItem addButton) {
         boolean checked = addButton.isChecked();
         if (checked) {
-            Toast.makeText(this, "Removing from favorites", Toast.LENGTH_SHORT).show();
+            removeFavorite();
+            addButton.setIcon(android.R.drawable.star_off);
+            Toast.makeText(this, "Removed from favorites", Toast.LENGTH_SHORT).show();
         } else {
-            Toast.makeText(this, "Adding to favorites", Toast.LENGTH_SHORT).show();
+            addFavorite();
+            addButton.setIcon(android.R.drawable.star_on);
+            Toast.makeText(this, "Added to favorites", Toast.LENGTH_SHORT).show();
         }
         addButton.setChecked(!checked);
+    }
 
+    private void removeFavorite() {
+        MainActivity.DB.delete(FavoritesContract.FavoritesEntry.TABLE_NAME,
+                FavoritesContract.FavoritesEntry.COLUMN_MOVIE_ID + "=" + mMovie.getId(), null);
+    }
+
+    private void addFavorite() {
+        ContentValues cv = new ContentValues();
+
+        cv.put(FavoritesContract.FavoritesEntry.COLUMN_MOVIE_ID, mMovie.getId());
+        cv.put(FavoritesContract.FavoritesEntry.COLUMN_TITLE, mMovie.getTitle());
+        cv.put(FavoritesContract.FavoritesEntry.COLUMN_POSTER, mMovie.getPosterRelativePath());
+        cv.put(FavoritesContract.FavoritesEntry.COLUMN_OVERVIEW, mMovie.getOverview());
+        cv.put(FavoritesContract.FavoritesEntry.COLUMN_RATING, mMovie.getRating());
+        cv.put(FavoritesContract.FavoritesEntry.COLUMN_RELEASE_DATE, mMovie.getReleaseDate());
+        if (MainActivity.DB.insert(FavoritesContract.FavoritesEntry.TABLE_NAME, null, cv) == -1) {
+            Log.d(LOG_TAG, "Inserting returned an error. Probably, the entry exists");
+        }
     }
 }

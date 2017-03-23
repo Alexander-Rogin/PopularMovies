@@ -38,6 +38,7 @@ public class Movie implements Parcelable {
         if (trailersParcel != null) {
             mTrailers = Arrays.copyOf(trailersParcel, trailersParcel.length, Trailer[].class);
         }
+        mId = in.readInt();
     }
 
     public static final Creator<Movie> CREATOR = new Creator<Movie>() {
@@ -85,6 +86,7 @@ public class Movie implements Parcelable {
         dest.writeDouble(mRating);
         dest.writeString(mReleaseDate);
         dest.writeParcelableArray(mTrailers, 0);
+        dest.writeInt(mId);
     }
 
     public int getId() {

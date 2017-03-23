@@ -1,6 +1,7 @@
 package com.example.arogin.popularmovies;
 
 import android.content.Intent;
+import android.database.sqlite.SQLiteDatabase;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.GridLayoutManager;
@@ -20,6 +21,7 @@ public class MainActivity extends AppCompatActivity implements MovieAdapter.Movi
     private static final String POPULAR_SORT = "popular";
     private static final String RATING_SORT = "top_rated";
 
+    public static SQLiteDatabase DB;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -34,6 +36,9 @@ public class MainActivity extends AppCompatActivity implements MovieAdapter.Movi
         mRecyclerViewMovies.setAdapter(mMovieAdapter);
 
         new PopularMoviesFetcherTask(mMovieAdapter).execute("");
+
+        FavoriteMoviesDbHelper dbHelper = new FavoriteMoviesDbHelper(this);
+        DB = dbHelper.getWritableDatabase();
     }
 
     @Override
