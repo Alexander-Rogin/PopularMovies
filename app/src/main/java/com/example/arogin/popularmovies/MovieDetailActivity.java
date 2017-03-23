@@ -18,6 +18,7 @@ import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -34,6 +35,7 @@ public class MovieDetailActivity extends AppCompatActivity implements TrailerAda
     private RecyclerView mRecyclerViewTrailers;
     private LinearLayoutManager mLinearLayoutManager;
     private TrailerAdapter mTrailerAdapter;
+    private Button mReviewButton;
 
     private Movie mMovie;
 
@@ -81,6 +83,16 @@ public class MovieDetailActivity extends AppCompatActivity implements TrailerAda
         mPlot = (TextView) findViewById(R.id.tv_plot);
         mRating = (TextView) findViewById(R.id.tv_rating);
         mRelease = (TextView) findViewById(R.id.tv_release);
+        mReviewButton = (Button) findViewById(R.id.open_reviews);
+        mReviewButton.setOnClickListener(new View.OnClickListener() {
+            public void onClick(View view) {
+                if (mMovie != null) {
+                    Intent intent = new Intent(this, ReviewActivity.class);
+                    intent.putExtra(Intent.EXTRA_TEXT, mMovie);
+                    startActivity(intent);
+                }
+            }
+        });
     }
 
     @Override
