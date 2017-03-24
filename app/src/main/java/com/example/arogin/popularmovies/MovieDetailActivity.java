@@ -25,7 +25,9 @@ import android.widget.Toast;
 
 import com.squareup.picasso.Picasso;
 
-public class MovieDetailActivity extends AppCompatActivity implements TrailerAdapter.TrailerAdapterOnClickHandler {
+public class MovieDetailActivity extends AppCompatActivity
+        implements TrailerAdapter.TrailerAdapterOnClickHandler,
+        ReviewAdapter.ReviewAdapterOnClickHandler {
     private static String LOG_TAG = "MovieDetailActivity";
     private ImageView mPoster;
     private TextView mTitle;
@@ -33,9 +35,10 @@ public class MovieDetailActivity extends AppCompatActivity implements TrailerAda
     private TextView mRating;
     private TextView mRelease;
     private RecyclerView mRecyclerViewTrailers;
-    private LinearLayoutManager mLinearLayoutManager;
+//    private LinearLayoutManager mLinearLayoutManager;
     private TrailerAdapter mTrailerAdapter;
-    private Button mReviewButton;
+    private RecyclerView mRecyclerViewReviews;
+    private ReviewAdapter mReviewAdapter;
 
     private Movie mMovie;
 
@@ -43,18 +46,24 @@ public class MovieDetailActivity extends AppCompatActivity implements TrailerAda
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_movie_detail);
-        mRecyclerViewTrailers = (RecyclerView) findViewById(R.id.recyclerview_trailers);
-        mLinearLayoutManager = new LinearLayoutManager(this);
-        mRecyclerViewTrailers.setLayoutManager(mLinearLayoutManager);
+        findViews();
+
+//        mLinearLayoutManager = new LinearLayoutManager(this);
+//        mRecyclerViewTrailers.setLayoutManager(mLinearLayoutManager);
+        mRecyclerViewTrailers.setLayoutManager(new LinearLayoutManager(this));
+        mRecyclerViewReviews.setLayoutManager(new LinearLayoutManager(this));
 
         mRecyclerViewTrailers.setHasFixedSize(true);
+        mRecyclerViewReviews.setHasFixedSize(true);
+
         mTrailerAdapter = new TrailerAdapter(this);
+        mReviewAdapter = new ReviewAdapter(this);
+
         mRecyclerViewTrailers.setAdapter(mTrailerAdapter);
+        mRecyclerViewReviews.setAdapter(mReviewAdapter);
 
         android.support.v7.app.ActionBar actionBar = getSupportActionBar();
         actionBar.setHomeButtonEnabled(true);
-
-        findViews();
 
         Intent parentIntent = getIntent();
         if (parentIntent.hasExtra(Intent.EXTRA_TEXT)) {
@@ -66,6 +75,7 @@ public class MovieDetailActivity extends AppCompatActivity implements TrailerAda
             mRelease.setText(mMovie.getReleaseDate());
 
             new TrailerFetcherTask(mTrailerAdapter).execute(mMovie.getId());
+            new ReviewFetcherTask(mReviewAdapter).execute(mMovie.getId());
         }
     }
 
@@ -83,16 +93,8 @@ public class MovieDetailActivity extends AppCompatActivity implements TrailerAda
         mPlot = (TextView) findViewById(R.id.tv_plot);
         mRating = (TextView) findViewById(R.id.tv_rating);
         mRelease = (TextView) findViewById(R.id.tv_release);
-        mReviewButton = (Button) findViewById(R.id.open_reviews);
-        mReviewButton.setOnClickListener(new View.OnClickListener() {
-            public void onClick(View view) {
-                if (mMovie != null) {
-                    Intent intent = new Intent(this, ReviewActivity.class);
-                    intent.putExtra(Intent.EXTRA_TEXT, mMovie);
-                    startActivity(intent);
-                }
-            }
-        });
+        mRecyclerViewTrailers = (RecyclerView) findViewById(R.id.recyclerview_trailers);
+        mRecyclerViewReviews = (RecyclerView) findViewById(R.id.recyclerview_reviews);
     }
 
     @Override
@@ -162,6 +164,15 @@ public class MovieDetailActivity extends AppCompatActivity implements TrailerAda
         cv.put(FavoritesContract.FavoritesEntry.COLUMN_RELEASE_DATE, mMovie.getReleaseDate());
         if (MainActivity.DB.insert(FavoritesContract.FavoritesEntry.TABLE_NAME, null, cv) == -1) {
             Log.d(LOG_TAG, "Inserting returned an error. Probably, the entry exists");
+        }
+    }
+
+    @Override
+    public void onClick(Review chosenReview) {
+        Uri uri = Uri.parse(chosenReview.getReviewUrl());
+        Intent intent = new Intent(Intent.ACTION_VIEW, uri);
+        if (intent.resolveActivity(getPackageManager()) != null) {
+            startActivity(intent);
         }
     }
 }

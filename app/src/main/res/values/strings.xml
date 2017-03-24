@@ -8,4 +8,6 @@
     <string name="trailers">Trailers</string>
     <string name="add_to_favorite">Add to favorite</string>
     <string name="open_reviews">Open Reviews</string>
+    <string name="trailers_header">Trailers</string>
+    <string name="reviews_header">Reviews</string>
 </resources>

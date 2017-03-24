@@ -16,6 +16,7 @@ public class MovieDbHelper {
     public static final String POPULAR_MOVIES_API_KEY_PARAM = "api_key";
     public static final String POPULAR_MOVIES_API_KEY = BuildConfig.THE_MOVIE_DB_API_TOKEN;
     public static final String POPULAR_MOVIES_VIDEOS = "videos";
+    public static final String POPULAR_MOVIES_REVIEWS = "reviews";
 
     private static Uri getMoviesUri(String sortType) {
         if (sortType == null || sortType == "") {
@@ -57,6 +58,19 @@ public class MovieDbHelper {
         return Uri.parse(POPULAR_MOVIES_BASE_ADDRESS).buildUpon()
                 .appendPath(Integer.toString(movieId))
                 .appendPath(POPULAR_MOVIES_VIDEOS)
+                .appendQueryParameter(POPULAR_MOVIES_API_KEY_PARAM, POPULAR_MOVIES_API_KEY)
+                .build();
+    }
+
+    public static String getReviewsJsonData(Integer movieId) {
+        Uri uri = getReviewsUri(movieId);
+        return getNetworkData(uri);
+    }
+
+    private static Uri getReviewsUri(Integer movieId) {
+        return Uri.parse(POPULAR_MOVIES_BASE_ADDRESS).buildUpon()
+                .appendPath(Integer.toString(movieId))
+                .appendPath(POPULAR_MOVIES_REVIEWS)
                 .appendQueryParameter(POPULAR_MOVIES_API_KEY_PARAM, POPULAR_MOVIES_API_KEY)
                 .build();
     }
