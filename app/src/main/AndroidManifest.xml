@@ -24,6 +24,11 @@
             android:parentActivityName=".MainActivity"
             android:launchMode="singleTop">
         </activity>
+
+        <provider
+            android:name="com.example.arogin.popularmovies.MovieContentProvider"
+            android:authorities="com.example.arogin.popularmovies"
+            android:exported="false"/>
     </application>
 
 </manifest>

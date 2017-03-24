@@ -141,9 +141,7 @@ public class MovieDetailActivity extends AppCompatActivity
             addButton.setIcon(android.R.drawable.star_off);
             Toast.makeText(this, "Removed from favorites", Toast.LENGTH_SHORT).show();
         } else {
-            addFavorite();
-            addButton.setIcon(android.R.drawable.star_on);
-            Toast.makeText(this, "Added to favorites", Toast.LENGTH_SHORT).show();
+            addFavorite(addButton);
         }
         addButton.setChecked(!checked);
     }
@@ -153,7 +151,7 @@ public class MovieDetailActivity extends AppCompatActivity
                 FavoritesContract.FavoritesEntry.COLUMN_MOVIE_ID + "=" + mMovie.getId(), null);
     }
 
-    private void addFavorite() {
+    private void addFavorite(MenuItem addButton) {
         ContentValues cv = new ContentValues();
 
         cv.put(FavoritesContract.FavoritesEntry.COLUMN_MOVIE_ID, mMovie.getId());
@@ -162,8 +160,10 @@ public class MovieDetailActivity extends AppCompatActivity
         cv.put(FavoritesContract.FavoritesEntry.COLUMN_OVERVIEW, mMovie.getOverview());
         cv.put(FavoritesContract.FavoritesEntry.COLUMN_RATING, mMovie.getRating());
         cv.put(FavoritesContract.FavoritesEntry.COLUMN_RELEASE_DATE, mMovie.getReleaseDate());
-        if (MainActivity.DB.insert(FavoritesContract.FavoritesEntry.TABLE_NAME, null, cv) == -1) {
-            Log.d(LOG_TAG, "Inserting returned an error. Probably, the entry exists");
+        Uri uri = getContentResolver().insert(FavoritesContract.FavoritesEntry.CONTENT_URI, cv);
+        if (uri != null) {
+            addButton.setIcon(android.R.drawable.star_on);
+            Toast.makeText(this, "Added to favorites", Toast.LENGTH_SHORT).show();
         }
     }
 

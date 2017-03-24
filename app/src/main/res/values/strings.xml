@@ -10,4 +10,5 @@
     <string name="open_reviews">Open Reviews</string>
     <string name="trailers_header">Trailers</string>
     <string name="reviews_header">Reviews</string>
+    <string name="favorites">Favorites Only</string>
 </resources>
