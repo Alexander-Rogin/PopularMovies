@@ -1,6 +1,7 @@
 package com.example.arogin.popularmovies;
 
 import android.content.Context;
+import android.database.Cursor;
 import android.os.AsyncTask;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
@@ -19,7 +20,8 @@ import java.util.ArrayList;
 public class MovieAdapter extends RecyclerView.Adapter<MovieAdapter.MovieAdapterViewHolder> {
     private final MovieAdapterOnClickHandler mClickHandler;
     private Movie[] mMovies;
-    Context mContext;
+    private Context mContext;
+    private Cursor mCursor;
 
     @Override
     public MovieAdapterViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
@@ -49,6 +51,43 @@ public class MovieAdapter extends RecyclerView.Adapter<MovieAdapter.MovieAdapter
     public void setMoviesData(Movie[] movies) {
         mMovies = movies;
         notifyDataSetChanged();
+    }
+
+    public void setMoviesDataFromCursor(Cursor cursor) {
+        if (cursor == null) {
+            return;
+        }
+
+        ArrayList<Movie> movies = new ArrayList<>();
+        for (cursor.moveToFirst(); !cursor.isAfterLast(); cursor.moveToNext()) {
+            int movieIdIndex = cursor.getColumnIndex(FavoritesContract.FavoritesEntry.COLUMN_MOVIE_ID);
+            int titleIndex = cursor.getColumnIndex(FavoritesContract.FavoritesEntry.COLUMN_TITLE);
+            int posterIndex = cursor.getColumnIndex(FavoritesContract.FavoritesEntry.COLUMN_POSTER);
+            int overviewIndex = cursor.getColumnIndex(FavoritesContract.FavoritesEntry.COLUMN_OVERVIEW);
+            int ratingIndex = cursor.getColumnIndex(FavoritesContract.FavoritesEntry.COLUMN_RATING);
+            int releaseIndex = cursor.getColumnIndex(FavoritesContract.FavoritesEntry.COLUMN_RELEASE_DATE);
+
+            movies.add(new Movie(
+                    cursor.getInt(movieIdIndex),
+                    cursor.getString(titleIndex),
+                    cursor.getString(posterIndex),
+                    cursor.getString(overviewIndex),
+                    cursor.getDouble(ratingIndex),
+                    cursor.getString(releaseIndex)
+            ));
+        }
+        cursor.close();
+        setMoviesData(movies.toArray(new Movie[movies.size()]));
+//        if (mCursor == c) {
+//            return;
+//        }
+//        Cursor temp = mCursor;
+//        this.mCursor = c;
+//
+//        if (c != null) {
+//            this.notifyDataSetChanged();
+//        }
+//        return temp;
     }
 
     public interface MovieAdapterOnClickHandler {
