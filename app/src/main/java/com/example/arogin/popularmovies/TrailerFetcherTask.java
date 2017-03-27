@@ -11,7 +11,7 @@ import org.json.JSONObject;
  */
 
 class TrailerFetcherTask extends AsyncTask<Integer, Void, Trailer[]> {
-    TrailerAdapter mTrailerAdapter;
+    private TrailerAdapter mTrailerAdapter;
 
     public TrailerFetcherTask(TrailerAdapter trailerAdapter) {
         super();
@@ -22,8 +22,7 @@ class TrailerFetcherTask extends AsyncTask<Integer, Void, Trailer[]> {
     protected Trailer[] doInBackground(Integer... params) {
         String results = MovieDbHelper.getTrailersJsonData(params[0]);
         if (results != null) {
-            Trailer[] trailers = parseTrailersJsonData(results);
-            return trailers;
+            return parseTrailersJsonData(results);
         }
         return null;
     }
@@ -39,11 +38,10 @@ class TrailerFetcherTask extends AsyncTask<Integer, Void, Trailer[]> {
         final String JSON_RESULTS_CODE = "results";
         final String JSON_NAME_CODE = "name";
         final String JSON_KEY_CODE = "key";
-        final String JSON_ID_CODE = "id";
 
         try {
             JSONObject trailersJson = new JSONObject(json);
-            if (trailersJson.has(JSON_RESULTS_CODE) == false) {
+            if (!trailersJson.has(JSON_RESULTS_CODE)) {
                 return null;
             }
             JSONArray trailersArray = trailersJson.getJSONArray(JSON_RESULTS_CODE);
@@ -53,9 +51,8 @@ class TrailerFetcherTask extends AsyncTask<Integer, Void, Trailer[]> {
 
                 String name = trailer.getString(JSON_NAME_CODE);
                 String key = trailer.getString(JSON_KEY_CODE);
-                String id = trailer.getString(JSON_ID_CODE);
 
-                trailers[i] = new Trailer(id, name, key);
+                trailers[i] = new Trailer(name, key);
             }
             return trailers;
         } catch (JSONException e) {

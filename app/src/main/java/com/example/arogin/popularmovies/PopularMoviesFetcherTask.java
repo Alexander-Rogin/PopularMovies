@@ -1,21 +1,16 @@
 package com.example.arogin.popularmovies;
 
-import android.net.Uri;
 import android.os.AsyncTask;
-import android.util.Log;
 
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
-import java.io.IOException;
-import java.net.MalformedURLException;
-import java.net.URL;
 
 /**
  * Created by arogin on 3/15/17.
  */
 
-public class PopularMoviesFetcherTask extends AsyncTask<String, Void, Movie[]> {
+class PopularMoviesFetcherTask extends AsyncTask<String, Void, Movie[]> {
     private MovieAdapter mMovieAdapter;
 
     public PopularMoviesFetcherTask(MovieAdapter movieAdapter) {
@@ -27,8 +22,7 @@ public class PopularMoviesFetcherTask extends AsyncTask<String, Void, Movie[]> {
     protected Movie[] doInBackground(String... params) {
         String results = MovieDbHelper.getMoviesJsonData(params[0]);
         if (results != null) {
-            Movie[] movies = parseMoviesJsonData(results);
-            return movies;
+            return parseMoviesJsonData(results);
         }
         return null;
     }
@@ -51,7 +45,7 @@ public class PopularMoviesFetcherTask extends AsyncTask<String, Void, Movie[]> {
 
         try {
             JSONObject moviesJson = new JSONObject(json);
-            if (moviesJson.has(JSON_RESULTS_CODE) == false) {
+            if (!moviesJson.has(JSON_RESULTS_CODE)) {
                 return null;
             }
             JSONArray moviesArray = moviesJson.getJSONArray(JSON_RESULTS_CODE);

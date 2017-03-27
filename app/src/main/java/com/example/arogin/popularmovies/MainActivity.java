@@ -2,8 +2,6 @@ package com.example.arogin.popularmovies;
 
 import android.content.Intent;
 import android.database.Cursor;
-import android.database.sqlite.SQLiteDatabase;
-import android.net.Uri;
 import android.support.v4.app.LoaderManager;
 import android.support.v4.content.AsyncTaskLoader;
 import android.support.v4.content.Loader;
@@ -27,7 +25,6 @@ public class MainActivity extends AppCompatActivity implements MovieAdapter.Movi
     private static final String POPULAR_SORT = "popular";
     private static final String RATING_SORT = "top_rated";
 
-    public static SQLiteDatabase DB;
     private static final String TAG = MainActivity.class.getSimpleName();
     private static final int FAVORITES_LOADER_ID = 0;
     private Menu mMenu;
@@ -45,9 +42,6 @@ public class MainActivity extends AppCompatActivity implements MovieAdapter.Movi
         mRecyclerViewMovies.setAdapter(mMovieAdapter);
 
         new PopularMoviesFetcherTask(mMovieAdapter).execute("");
-
-        FavoriteMoviesDbHelper dbHelper = new FavoriteMoviesDbHelper(this);
-        DB = dbHelper.getWritableDatabase();
 
         getSupportLoaderManager().initLoader(FAVORITES_LOADER_ID, null, this);
     }
@@ -79,6 +73,8 @@ public class MainActivity extends AppCompatActivity implements MovieAdapter.Movi
         mMenu = menu;
         MenuInflater inflater = getMenuInflater();
         inflater.inflate(R.menu.main_activity_options, menu);
+        MenuItem item = mMenu.findItem(R.id.menuSortPopular);
+        item.setChecked(true);
         return true;
     }
 

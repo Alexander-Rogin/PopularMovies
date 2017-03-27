@@ -10,7 +10,7 @@ import java.util.Scanner;
  * Created by arogin on 2/7/17.
  */
 
-public class NetworkDataFetcher {
+class NetworkDataFetcher {
     public static String getResponseFromUrl(URL url) throws IOException {
         HttpURLConnection connection = (HttpURLConnection) url.openConnection();
         connection.setConnectTimeout(5000);

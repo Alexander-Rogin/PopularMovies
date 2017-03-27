@@ -9,7 +9,7 @@ import android.provider.BaseColumns;
 
 public class FavoritesContract {
     public static final String AUTHORITY = "com.example.arogin.popularmovies";
-    public static final Uri BASE_CONTENT_URI = Uri.parse("content://" + AUTHORITY);
+    private static final Uri BASE_CONTENT_URI = Uri.parse("content://" + AUTHORITY);
     public static final String PATH_FAVORITES = "favorites";
 
     public static final class FavoritesEntry implements BaseColumns {

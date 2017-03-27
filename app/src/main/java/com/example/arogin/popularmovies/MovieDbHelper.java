@@ -19,7 +19,7 @@ public class MovieDbHelper {
     public static final String POPULAR_MOVIES_REVIEWS = "reviews";
 
     private static Uri getMoviesUri(String sortType) {
-        if (sortType == null || sortType == "") {
+        if (sortType == null || sortType.equals("")) {
             sortType = POPULAR_MOVIES_DEFAULT_SORT;
         }
         return Uri.parse(POPULAR_MOVIES_BASE_ADDRESS).buildUpon()
@@ -36,8 +36,7 @@ public class MovieDbHelper {
             return null;
         }
         try {
-            String results = NetworkDataFetcher.getResponseFromUrl(url);
-            return results;
+            return NetworkDataFetcher.getResponseFromUrl(url);
         } catch (IOException e) {
             e.printStackTrace();
         }

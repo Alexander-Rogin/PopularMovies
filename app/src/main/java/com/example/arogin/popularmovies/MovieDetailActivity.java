@@ -1,24 +1,16 @@
 package com.example.arogin.popularmovies;
 
-import android.app.ActionBar;
 import android.content.ContentValues;
 import android.content.Intent;
-import android.content.pm.PackageManager;
 import android.database.Cursor;
-import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.support.v7.widget.Toolbar;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
-import android.view.View;
-import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -28,14 +20,12 @@ import com.squareup.picasso.Picasso;
 public class MovieDetailActivity extends AppCompatActivity
         implements TrailerAdapter.TrailerAdapterOnClickHandler,
         ReviewAdapter.ReviewAdapterOnClickHandler {
-    private static String LOG_TAG = "MovieDetailActivity";
     private ImageView mPoster;
     private TextView mTitle;
     private TextView mPlot;
     private TextView mRating;
     private TextView mRelease;
     private RecyclerView mRecyclerViewTrailers;
-//    private LinearLayoutManager mLinearLayoutManager;
     private TrailerAdapter mTrailerAdapter;
     private RecyclerView mRecyclerViewReviews;
     private ReviewAdapter mReviewAdapter;
@@ -48,8 +38,6 @@ public class MovieDetailActivity extends AppCompatActivity
         setContentView(R.layout.activity_movie_detail);
         findViews();
 
-//        mLinearLayoutManager = new LinearLayoutManager(this);
-//        mRecyclerViewTrailers.setLayoutManager(mLinearLayoutManager);
         mRecyclerViewTrailers.setLayoutManager(new LinearLayoutManager(this));
         mRecyclerViewReviews.setLayoutManager(new LinearLayoutManager(this));
 
@@ -80,10 +68,14 @@ public class MovieDetailActivity extends AppCompatActivity
     }
 
     private boolean isFavorite() {
-        Cursor cursor = MainActivity.DB.rawQuery( "select * from " +
-                FavoritesContract.FavoritesEntry.TABLE_NAME +
-                " where " + FavoritesContract.FavoritesEntry.COLUMN_MOVIE_ID +
-                "=" + mMovie.getId() + "", null);
+        String movieId = mMovie.getId().toString();
+        Uri uri = FavoritesContract.FavoritesEntry.CONTENT_URI;
+        uri = uri.buildUpon().appendPath(movieId).build();
+        Cursor cursor = getContentResolver().query(uri,
+                null,
+                null,
+                null,
+                null);
         return cursor.getCount() > 0;
     }
 
@@ -135,20 +127,24 @@ public class MovieDetailActivity extends AppCompatActivity
     }
 
     private void handleFavorites(MenuItem addButton) {
-        boolean checked = addButton.isChecked();
-        if (checked) {
-            removeFavorite();
-            addButton.setIcon(android.R.drawable.star_off);
-            Toast.makeText(this, "Removed from favorites", Toast.LENGTH_SHORT).show();
+        if (addButton.isChecked()) {
+            removeFavorite(addButton);
         } else {
             addFavorite(addButton);
         }
-        addButton.setChecked(!checked);
     }
 
-    private void removeFavorite() {
-        MainActivity.DB.delete(FavoritesContract.FavoritesEntry.TABLE_NAME,
-                FavoritesContract.FavoritesEntry.COLUMN_MOVIE_ID + "=" + mMovie.getId(), null);
+    private void removeFavorite(MenuItem addButton) {
+        String movieId = mMovie.getId().toString();
+        Uri uri = FavoritesContract.FavoritesEntry.CONTENT_URI;
+        uri = uri.buildUpon().appendPath(movieId).build();
+
+        int deleteCount = getContentResolver().delete(uri, null, null);
+        if (deleteCount > 0) {
+            addButton.setIcon(android.R.drawable.star_off);
+            addButton.setChecked(false);
+            Toast.makeText(this, "Removed from favorites", Toast.LENGTH_SHORT).show();
+        }
     }
 
     private void addFavorite(MenuItem addButton) {
@@ -163,6 +159,7 @@ public class MovieDetailActivity extends AppCompatActivity
         Uri uri = getContentResolver().insert(FavoritesContract.FavoritesEntry.CONTENT_URI, cv);
         if (uri != null) {
             addButton.setIcon(android.R.drawable.star_on);
+            addButton.setChecked(true);
             Toast.makeText(this, "Added to favorites", Toast.LENGTH_SHORT).show();
         }
     }

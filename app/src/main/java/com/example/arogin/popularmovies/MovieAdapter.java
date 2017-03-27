@@ -2,17 +2,13 @@ package com.example.arogin.popularmovies;
 
 import android.content.Context;
 import android.database.Cursor;
-import android.os.AsyncTask;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 
 import com.squareup.picasso.Picasso;
-
-import java.util.ArrayList;
 
 /**
  * Created by arogin on 2/9/17.
@@ -21,7 +17,6 @@ public class MovieAdapter extends RecyclerView.Adapter<MovieAdapter.MovieAdapter
     private final MovieAdapterOnClickHandler mClickHandler;
     private Movie[] mMovies;
     private Context mContext;
-    private Cursor mCursor;
 
     @Override
     public MovieAdapterViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {

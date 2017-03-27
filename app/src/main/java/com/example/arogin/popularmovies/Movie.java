@@ -2,9 +2,6 @@ package com.example.arogin.popularmovies;
 
 import android.os.Parcel;
 import android.os.Parcelable;
-import android.util.Log;
-
-import java.util.Arrays;
 
 /**
  * Created by arogin on 2/9/17.
@@ -83,7 +80,7 @@ public class Movie implements Parcelable {
         dest.writeInt(mId);
     }
 
-    public int getId() {
+    public Integer getId() {
         return mId;
     }
 }

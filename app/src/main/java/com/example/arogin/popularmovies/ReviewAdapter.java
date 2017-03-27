@@ -13,7 +13,7 @@ import android.widget.TextView;
 
 public class ReviewAdapter extends RecyclerView.Adapter<ReviewAdapter.ReviewAdapterViewHolder> {
     private final ReviewAdapter.ReviewAdapterOnClickHandler mClickHandler;
-    Context mContext;
+    private Context mContext;
     private Review[] mReviews;
 
     @Override
@@ -21,9 +21,8 @@ public class ReviewAdapter extends RecyclerView.Adapter<ReviewAdapter.ReviewAdap
         mContext = parent.getContext();
         int layoutIdForListItem = R.layout.review_list_item;
         LayoutInflater inflater = LayoutInflater.from(mContext);
-        boolean shoulAttachToParentImmediately = false;
 
-        View view = inflater.inflate(layoutIdForListItem, parent, shoulAttachToParentImmediately);
+        View view = inflater.inflate(layoutIdForListItem, parent, false);
 
         return new ReviewAdapter.ReviewAdapterViewHolder(view);
     }

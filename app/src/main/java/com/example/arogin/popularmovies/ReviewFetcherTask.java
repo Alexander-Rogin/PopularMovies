@@ -1,7 +1,6 @@
 package com.example.arogin.popularmovies;
 
 import android.os.AsyncTask;
-import android.util.Log;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -23,8 +22,7 @@ class ReviewFetcherTask extends AsyncTask<Integer, Void, Review[]> {
     protected Review[] doInBackground(Integer... params) {
         String results = MovieDbHelper.getReviewsJsonData(params[0]);
         if (results != null) {
-            Review[] reviews = parseReviewsJsonData(results);
-            return reviews;
+            return parseReviewsJsonData(results);
         }
         return null;
     }
@@ -36,7 +34,7 @@ class ReviewFetcherTask extends AsyncTask<Integer, Void, Review[]> {
 
         try {
             JSONObject moviesJson = new JSONObject(json);
-            if (moviesJson.has(JSON_RESULTS_CODE) == false) {
+            if (!moviesJson.has(JSON_RESULTS_CODE)) {
                 return null;
             }
             JSONArray reviewsArray = moviesJson.getJSONArray(JSON_RESULTS_CODE);
