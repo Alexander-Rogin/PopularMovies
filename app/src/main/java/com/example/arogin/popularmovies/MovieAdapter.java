@@ -58,7 +58,8 @@ public class MovieAdapter extends RecyclerView.Adapter<MovieAdapter.MovieAdapter
             return;
         }
 
-        ArrayList<Movie> movies = new ArrayList<>();
+        Movie[] movies = new Movie[cursor.getCount()];
+        int i = 0;
         for (cursor.moveToFirst(); !cursor.isAfterLast(); cursor.moveToNext()) {
             int movieIdIndex = cursor.getColumnIndex(FavoritesContract.FavoritesEntry.COLUMN_MOVIE_ID);
             int titleIndex = cursor.getColumnIndex(FavoritesContract.FavoritesEntry.COLUMN_TITLE);
@@ -67,27 +68,17 @@ public class MovieAdapter extends RecyclerView.Adapter<MovieAdapter.MovieAdapter
             int ratingIndex = cursor.getColumnIndex(FavoritesContract.FavoritesEntry.COLUMN_RATING);
             int releaseIndex = cursor.getColumnIndex(FavoritesContract.FavoritesEntry.COLUMN_RELEASE_DATE);
 
-            movies.add(new Movie(
+            movies[i++] = new Movie(
                     cursor.getInt(movieIdIndex),
                     cursor.getString(titleIndex),
                     cursor.getString(posterIndex),
                     cursor.getString(overviewIndex),
                     cursor.getDouble(ratingIndex),
                     cursor.getString(releaseIndex)
-            ));
+            );
         }
         cursor.close();
-        setMoviesData(movies.toArray(new Movie[movies.size()]));
-//        if (mCursor == c) {
-//            return;
-//        }
-//        Cursor temp = mCursor;
-//        this.mCursor = c;
-//
-//        if (c != null) {
-//            this.notifyDataSetChanged();
-//        }
-//        return temp;
+        setMoviesData(movies);
     }
 
     public interface MovieAdapterOnClickHandler {
