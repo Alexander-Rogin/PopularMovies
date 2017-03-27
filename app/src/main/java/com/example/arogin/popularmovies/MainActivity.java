@@ -58,7 +58,7 @@ public class MainActivity extends AppCompatActivity implements MovieAdapter.Movi
         if (mMenu == null) {
             return;
         }
-        MenuItem item = mMenu.getItem(0);
+        MenuItem item = mMenu.findItem(R.id.menuFavorites);
         if (item == null) {
             return;
         }
